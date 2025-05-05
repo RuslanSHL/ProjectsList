@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>{{post.title}}</h3>
+<p>{{post.text}}</p>
+<p>{{post.project_link}}</p>
+<a href={{ url_for('post_like_action', id=post.id, action='like') }}>+ {{post.like}}</a>
+<a href={{ url_for('post_like_action', id=post.id, action='dislike') }}>- {{post.dislike}}</a>
+
+
+{% endblock %}

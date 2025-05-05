@@ -8,8 +8,8 @@ class Comment(SqlAlchemyBase):
 
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     text = sa.Column(sa.String)
-    like = sa.Column(sa.Integer)
-    dislike = sa.Column(sa.Integer)
+    like = sa.Column(sa.Integer, default=0)
+    dislike = sa.Column(sa.Integer, default=0)
     create_time = sa.Column(sa.DateTime, default=datetime.now)
 
     author = sa.orm.relationship('User', back_populates='comments')

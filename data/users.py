@@ -4,8 +4,10 @@ from .db_session import SqlAlchemyBase
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from flask_login import UserMixin
 
-class User(SqlAlchemyBase):
+
+class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
@@ -16,6 +18,8 @@ class User(SqlAlchemyBase):
     image = sa.Column(sa.String)
     github = sa.Column(sa.String)
     create_time = sa.Column(sa.DateTime, default=datetime.now)
+
+    liked_posts = sa.orm.relationship('Post', backref='user_who_liked')
 
     posts = sa.orm.relationship('Post', back_populates='author')
 

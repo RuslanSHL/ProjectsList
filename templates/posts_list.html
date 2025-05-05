@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+{% if current_user.is_authenticated %}
+<a class='btn btn-primary' href='/add_post'>Добавить пост</a>
+{% endif %}
+{% for post in posts %}
+    <p>
+        <div>
+            <a href='posts/{{post.id}}'><h4>{{post.title}}</h4></a>
+            {{post.text}}
+            {{post.category}}
+	    {% if current_user.id == post.id %}
+	    <a href='posts/edit/{{post.id}}'>Изменить</a>
+	    {% endif %}
+        </div>
+    </p>
+{% endfor %}
+{% endblock %}

@@ -11,8 +11,8 @@ class Post(SqlAlchemyBase):
     text = sa.Column(sa.String)
     project_link = sa.Column(sa.String)
     category = sa.Column(sa.String)
-    like = sa.Column(sa.Integer)
-    dislike = sa.Column(sa.Integer)
+    like = sa.Column(sa.Integer, default=0)
+    dislike = sa.Column(sa.Integer, default=0)
     create_time = sa.Column(sa.DateTime, default=datetime.now)
 
     author = sa.orm.relationship('User', back_populates='posts')
