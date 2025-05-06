@@ -18,4 +18,15 @@ class Post(SqlAlchemyBase):
     author = sa.orm.relationship('User', back_populates='posts')
     author_id = sa.Column(sa.Integer, sa.ForeignKey('users.id'))
 
+    users_who_liked = sa.orm.relationship('User', back_populates='liked_posts', secondary='rating_posts')
+
     comments = sa.orm.relationship('Comment', back_populates='post')
+
+
+class RatingPosts(SqlAlchemyBase):
+    __tablename__ = 'rating_posts'
+
+    post_id = sa.Column(sa.Integer, sa.ForeignKey('posts.id'), primary_key=True)
+    user_id = sa.Column(sa.Integer, sa.ForeignKey('users.id'), primary_key=True)
+    rating = sa.Column(sa.Integer)
+

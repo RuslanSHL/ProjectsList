@@ -1,11 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3>{{post.title}}</h3>
-<p>{{post.text}}</p>
-<p>{{post.project_link}}</p>
+<h3>{{ post.title }}</h3>
+<p>{{ post.text }}</p>
+<p>{{ post.project_link }}</p>
 <a href={{ url_for('post_like_action', id=post.id, action='like') }}>+ {{post.like}}</a>
 <a href={{ url_for('post_like_action', id=post.id, action='dislike') }}>- {{post.dislike}}</a>
+
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.text.label }}<br>
+        {{ form.text(class="form-control") }}<br>
+        {% for error in form.text.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    {% if message %}
+        <p class="alert alert-danger" role="alert">{{ message }}</p>
+    {% endif %}
+</form>
+
+{% for comment in post.comments %}
+    {{ comment.author.name }}
+    {{ comment.text }}
+    <a href={{ url_for('comment_like_action', id=comment.id, action='like') }}>+ {{comment.like}}</a>
+    <a href={{ url_for('comment_like_action', id=comment.id, action='dislike') }}>- {{comment.dislike}}</a>
+    <br>
+{% endfor %}
 
 
 {% endblock %}

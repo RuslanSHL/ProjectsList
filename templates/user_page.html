@@ -11,6 +11,7 @@
 {% for post in user.posts %}
 <p>
     <a href='posts/{{post.id}}'>{{post.title}}</a>
+    <a href='posts/edit/{{post.id}}'>Изменить</a>
 </p>
 {% endfor %}
 {% if user.id == current_user.id %}

@@ -14,6 +14,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from forms.register_form import RegisterForm
 from forms.login_form import LoginForm
 from forms.post_form import PostForm
+from forms.comment_form import CommentForm
 
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = 'lms_yandex_ru'
@@ -118,7 +119,7 @@ def posts_list(category):
     return flask.render_template('posts_list.html', title='Посты', posts=posts)
 
 
-@app.route('/like/<int:id>/<action>')
+@app.route('/post_like/<int:id>/<action>')
 def post_like_action(id, action):
     print(action, id, current_user.id)
     db = db_session.create_session()
@@ -131,11 +132,33 @@ def post_like_action(id, action):
     return flask.redirect(flask.request.referrer)
 
 
-@app.route('/posts/<int:id>')
+@app.route('/comment_like/<int:id>/<action>')
+def comment_like_action(id, action):
+    print(action, id, current_user.id)
+    db = db_session.create_session()
+    comment = db.query(Comment).filter(Comment.id == id).first()
+    if action == 'like':
+        comment.like += 1
+    else:
+        comment.dislike += 1
+    db.commit()
+    return flask.redirect(flask.request.referrer)
+
+
+@app.route('/posts/<int:id>', methods=['GET', 'POST'])
 def post_view(id):
+    form = CommentForm()
     db = db_session.create_session()
     post = db.query(Post).filter(Post.id==id).first()
-    return flask.render_template('post_view.html', title=post.title, post=post)
+    if form.validate_on_submit():
+        print('GET')
+        comment = Comment()
+        comment.post_id = post.id
+        comment.author_id = current_user.id
+        comment.text = form.text.data
+        db.add(comment)
+        db.commit()
+    return flask.render_template('post_view.html', title=post.title, post=post, form=form)
 
 
 @app.route('/posts/edit/<int:id>', methods=['GET', 'POST'])

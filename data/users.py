@@ -19,11 +19,12 @@ class User(SqlAlchemyBase, UserMixin):
     github = sa.Column(sa.String)
     create_time = sa.Column(sa.DateTime, default=datetime.now)
 
-    liked_posts = sa.orm.relationship('Post', backref='user_who_liked')
-
     posts = sa.orm.relationship('Post', back_populates='author')
 
     comments = sa.orm.relationship('Comment', back_populates='author')
+
+    liked_posts = sa.orm.relationship('Post', back_populates='users_who_liked', secondary='rating_posts')
+    liked_comments = sa.orm.relationship('Comment', back_populates='users_who_liked', secondary='rating_comments')
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
