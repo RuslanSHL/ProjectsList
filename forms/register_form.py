@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, TextAreaField, SubmitField, EmailField
 from wtforms.validators import DataRequired
+from flask_wtf.file import FileField
 
 
 class RegisterForm(FlaskForm):
@@ -10,6 +11,6 @@ class RegisterForm(FlaskForm):
     name = StringField('Имя', validators=[DataRequired()])
     info = TextAreaField('Информация о себе')
     github = StringField('Ссылка на свой github')
-    image = StringField('Картинка')
+    image = FileField('Картинка')
     submit = SubmitField('Зарегистрироваться')
 

@@ -3,9 +3,19 @@
 
 <h3>{{ post.title }}</h3>
 <p>{{ post.text }}</p>
-<p>{{ post.project_link }}</p>
+<a href='{{ post.project_link }}'>
+    <div class='github_link'>
+        <p>{{ info['author'] }}</p>
+        <p>{{ post.project_link }}</p>
+        <p>{{ info['description'] }}</p>
+        <p>{{ info['stars'] }}</p>
+    </div>
+</a>
 <a href={{ url_for('post_like_action', id=post.id, action='like') }}>+ {{post.like}}</a>
 <a href={{ url_for('post_like_action', id=post.id, action='dislike') }}>- {{post.dislike}}</a>
+{% if post.author_id == current_user.id or current_user.id == 1 %}
+<p><a class='btn btn-warning' href='/posts/edit/{{post.id}}'>Изменить</a></p>
+{% endif %}
 
 <form action="" method="post">
     {{ form.hidden_tag() }}

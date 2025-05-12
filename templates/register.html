@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Регистрация</h1>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <p>
         {{ form.name.label }}<br>
@@ -15,7 +15,11 @@
     </p>
     <p>
         {{ form.mail.label }}<br>
-        {{ form.mail(class="form-control", type="email") }}<br>
+        {% if edit %}
+            {{ form.mail(class="form-control", type="email", readonly=True) }}<br>
+        {% else %}
+            {{ form.mail(class="form-control", type="email") }}<br>
+        {% endif %}
         {% for error in form.mail.errors %}
             <p class="alert alert-danger" role="alert">
                 {{ error }}
@@ -57,6 +61,8 @@
                 {{ error }}
             </p>
         {% endfor %}
+    </p>
+    <p>
         {{ form.image.label }}<br>
         {{ form.image(class="form-control") }}<br>
         {% for error in form.image.errors %}

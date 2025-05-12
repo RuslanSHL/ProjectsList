@@ -1,18 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
+<p>
+<a href='/{{category + '/best'}}'>Лучшее</a>
+<a href='/{{category + '/new'}}'>Новое</a>
 {% if current_user.is_authenticated %}
-<a class='btn btn-primary' href='/add_post'>Добавить пост</a>
+<a class='btn btn-primary' href='/add_post' style='float: right'>Добавить пост</a>
 {% endif %}
-{% for post in posts %}
-    <p>
-        <div>
-            <a href='posts/{{post.id}}'><h4>{{post.title}}</h4></a>
-            {{post.text}}
-            {{post.category}}
-	    {% if current_user.id == post.id %}
-	    <a href='posts/edit/{{post.id}}'>Изменить</a>
-	    {% endif %}
+</p>
+<div class='posts' style=''>
+    {% for post in posts %}
+    <div class='small-post'>
+        <div style='display: inline-block;'>
+            <a href='/posts/{{post.id}}'>
+                <h4>{{post.title}}</h4>
+            </a>
+            <p>{{post.text}}</p>
+            <p>{{post.category}}</p>
+            {% if post.like > post.dislike %}
+                <p style='color: green'>{{post.like - post.dislike}}</p>
+            {% elif post.like == post.dislike %}
+                <p>{{post.like - post.dislike}}</p>
+            {% else %}
+                <p style='color: red'>{{post.like - post.dislike}}</p>
+            {% endif %}
         </div>
-    </p>
-{% endfor %}
+        {% if current_user.id == post.author.id or current_user.id == 1 %}
+        <div style='display: inline-block; float: right;'>
+            <a type='button' class='btn btn-warning' href='posts/edit/{{post.id}}'>Изменить</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

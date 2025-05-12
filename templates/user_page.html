@@ -1,20 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3>{{user.name}}</h3>
-<p>
-{{user.info}}
-</p>
-<p>
-{{user.date}}
-</p>
-{% for post in user.posts %}
-<p>
-    <a href='posts/{{post.id}}'>{{post.title}}</a>
-    <a href='posts/edit/{{post.id}}'>Изменить</a>
-</p>
-{% endfor %}
-{% if user.id == current_user.id %}
-<a class='btn btn-warning' href='/logout'>Выйти</a>
-{% endif %}
+
+<div class='container'>
+	<div style='display: inline-block'>
+		<img src='./{{user.image}}' alt='иконка пользователя'/>
+	</div>
+	<div style='display: inline-block'>
+		<h3>{{user.name}}</h3>
+		<p>{{user.info}}</p>
+		<a href={{user.github}} target='_blank'>{{user.github}}</a>
+		<p>{{user.create_time.date()}}</p>
+	</div>
+	<div>
+	{% if user.id == current_user.id %}
+	<a class='btn btn-warning' href='/user{{user.id}}/edit'>Изменить профиль</a>
+	<a class='btn btn-warning' href='/logout'>Выйти</a>
+	{% endif %}
+	</div>
+	<div class='posts' style='display: inline-block'>
+		{% for post in user.posts %}
+		<div class='small-post'>
+		<div style='display: inline-block;'>
+			<a href='posts/{{post.id}}'>
+			<h4>{{post.title}}</h4>
+			</a>
+			<p>{{post.text}}</p>
+			<p>{{post.category}}</p>
+		</div>
+		{% if current_user.id == post.author.id %}
+		<div style='display: inline-block; float: right;'>
+			<a type='button' class='btn btn-warning' href='posts/edit/{{post.id}}'>Изменить</a>
+		</div>
+		{% endif %}
+		</div>
+		{% endfor %}
+	</div>
+	{% if current_user.is_authenticated %}
+	<a class='btn btn-primary' href='/add_post' style='text-align: center; float: right'>Добавить пост</a>
+	{% endif %}
+<div>
 {% endblock %}

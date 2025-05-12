@@ -44,5 +44,8 @@
     {% if message %}
         <p class="alert alert-danger" role="alert">{{message}}</p>
     {% endif %}
+    {% if edit %}
+        <a href='/posts/delete/{{ post_id }}'>Удалить</a>
+    {% endif %}
 </form>
 {% endblock %}
