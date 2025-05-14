@@ -20,20 +20,27 @@
 	</div>
 	<div class='posts' style='display: inline-block'>
 		{% for post in user.posts %}
-            <div class='small-post'>
-                <a href='posts/{{post.id}}' style='max-width: 75%'>
-                    <div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>
-                        <h4>{{post.title}}</h4>
-                        <p style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>{{post.text}}</p>
-                        <small>{{post.category}}</small>
-                    </div>
-                </a>
-                {% if current_user.id == post.author.id or current_user.id == 1 %}
-                <div style='display: inline-block;'>
-                    <a type='button' class='btn btn-warning' href='posts/edit/{{post.id}}'>Изменить</a>
-                </div>
-                {% endif %}
-            </div>
+		<div class='small-post'>
+			<a href='posts/{{post.id}}' style='max-width: 75%'>
+			<div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>
+				<h4>{{post.title}}</h4>
+				<p style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>{{post.text}}</p>
+				<small>{{post.category}}</small>
+				<p>
+				{% if post.like > post.dislike %}
+				<small style='color: green'>+{{ post.like - post.dislike }}</small>
+				{% elif post.like < post.dislike %}
+				<small style='color: red'>-{{ post.dislike - post.like }}</small>
+				{% endif %}
+				</p>
+			</div>
+			</a>
+			{% if current_user.id == post.author.id or current_user.id == 1 %}
+			<div style='display: inline-block;'>
+			<a type='button' class='btn btn-warning' href='posts/edit/{{post.id}}'>Изменить</a>
+			</div>
+			{% endif %}
+		</div>
 		{% endfor %}
 	</div>
 	{% if current_user.is_authenticated %}

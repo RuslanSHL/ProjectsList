@@ -15,7 +15,14 @@
                     <div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>
                         <h4>{{post.title}}</h4>
                         <p style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>{{post.text}}</p>
-                        <small>{{post.category}}</small>
+			<small>{{post.category}}</small>
+			<p>
+			{% if post.like > post.dislike %}
+			<small style='color: green'>+{{ post.like - post.dislike }}</small>
+			{% elif post.like < post.dislike %}
+			<small style='color: red'>-{{ post.dislike - post.like }}</small>
+			{% endif %}
+			</p>
                     </div>
                 </a>
                 {% if current_user.id == post.author.id or current_user.id == 1 %}
