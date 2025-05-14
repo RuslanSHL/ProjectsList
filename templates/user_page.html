@@ -4,7 +4,7 @@
 
 <div class='container'>
 	<div style='display: inline-block'>
-		<img src='./{{user.image}}' alt='иконка пользователя'/>
+		<img class='user-image' src='./{{user.image}}' alt='иконка пользователя'/>
 	</div>
 	<div style='display: inline-block'>
 		<h3>{{user.name}}</h3>
@@ -20,20 +20,20 @@
 	</div>
 	<div class='posts' style='display: inline-block'>
 		{% for post in user.posts %}
-		<div class='small-post'>
-		<div style='display: inline-block;'>
-			<a href='posts/{{post.id}}'>
-			<h4>{{post.title}}</h4>
-			</a>
-			<p>{{post.text}}</p>
-			<p>{{post.category}}</p>
-		</div>
-		{% if current_user.id == post.author.id %}
-		<div style='display: inline-block; float: right;'>
-			<a type='button' class='btn btn-warning' href='posts/edit/{{post.id}}'>Изменить</a>
-		</div>
-		{% endif %}
-		</div>
+            <div class='small-post'>
+                <a href='posts/{{post.id}}' style='max-width: 75%'>
+                    <div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>
+                        <h4>{{post.title}}</h4>
+                        <p style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>{{post.text}}</p>
+                        <small>{{post.category}}</small>
+                    </div>
+                </a>
+                {% if current_user.id == post.author.id or current_user.id == 1 %}
+                <div style='display: inline-block;'>
+                    <a type='button' class='btn btn-warning' href='posts/edit/{{post.id}}'>Изменить</a>
+                </div>
+                {% endif %}
+            </div>
 		{% endfor %}
 	</div>
 	{% if current_user.is_authenticated %}

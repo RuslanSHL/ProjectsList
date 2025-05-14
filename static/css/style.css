@@ -118,7 +118,9 @@
 	vertical-align: middle;
 	margin: 5px;
 	margin-right: 10px;
+	border-radius: 10%;
 }
+
 	
 body {
     background-color: #f8f9fa;
@@ -145,6 +147,12 @@ body {
     border-radius: 30%;
     margin-right: 10px;
     border: 2px solid #007bff;
+
+}
+.user-image {
+    margin: 10px;
+    border-radius: 10%;
+    border: 2px solid #007bff;
 }
 
 .user-name {
@@ -163,3 +171,15 @@ body {
     padding-left: 25px;
 }
 
+@keyframes blink {
+      0%, 50% {
+        opacity: 1;
+      }
+      51%, 100% {
+        opacity: 0;
+      }
+    }
+
+.blinking-symbol {
+      animation: blink 3s infinite; /* Анимация длится 1 секунду и повторяется бесконечно */
+    }

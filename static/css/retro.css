@@ -1,0 +1,383 @@
+/* General Retro Terminal Style */
+
+.small-post {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 15px;
+    padding: 15px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.small-post p {
+    color: #303030;
+    margin: 0px;
+    text-overflow: ellipsis;
+}
+
+
+.small-post small {
+    color: #505050;
+    margin: 0px;
+}
+
+.small-post h4 {
+    color: black;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.posts {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.posts .btn {
+    display: block;
+    cursor: pointer;
+    text-align: center;
+    margin: 15px;
+    padding: 8px 16px;
+    margin-left: 16px;
+    flex-shrink: 0;
+}
+
+.news {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    width: 25%;
+}
+
+.container {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+.comment {
+	padding: 20px;
+	overflow-wrap: break-word;
+	border-bottom: 1px solid #ddd;
+}
+
+.comment .comment-author {
+	color: #ccc;
+}
+
+.comment .comment-author img{
+	height: 2em;
+	vertical-align: middle;
+	margin: 5px;
+	margin-right: 10px;
+}
+
+.sumbit-comment {
+	padding-top: 20px;
+}
+
+.sumbit-comment p{
+	margin-bottom: 5px;
+}
+
+.post-info {
+	color: black;
+}
+
+.post-info a{
+	color: black;
+}
+
+.github_link {
+	color: #333;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 10px;
+	background-color: #eee;
+}
+
+.github_link .link {
+	color: black;
+	text-decoration: underline;
+}
+
+.github_link .author, .stars, .language{
+	font-size: 0.9em;
+	color: #555;
+}
+
+.github_link .image {
+	height: 3em;
+	vertical-align: middle;
+	margin: 5px;
+	margin-right: 10px;
+	border-radius: 10%;
+}
+
+	
+body {
+    background-color: #f8f9fa;
+}
+
+.filter {
+    padding-right: 25px;
+}
+
+.navbar {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #000;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.user-icon {
+    border-radius: 30%;
+    margin-right: 10px;
+    border: 2px solid #007bff;
+
+}
+.user-image {
+    margin: 10px;
+    border-radius: 10%;
+    border: 2px solid #007bff;
+}
+
+.user-name {
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.category a {
+    color: #6c757d;
+    font-size: 14px;
+    border-right: 1px solid;
+    border-left: 1px solid;
+    border-color: #ccc;
+    padding-right: 25px;
+    padding-left: 25px;
+}
+
+@keyframes blink {
+      0%, 50% {
+        opacity: 1;
+      }
+      51%, 100% {
+        opacity: 0;
+      }
+    }
+
+.blinking-symbol {
+      animation: blink 3s infinite; /* Анимация длится 1 секунду и повторяется бесконечно */
+    }
+
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #000000;
+    color: #00ff00;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    border: 4px solid #00ff00;
+    padding: 15px;
+    background-color: #001100;
+    box-shadow: 0 0 20px #00ff00, inset 0 0 10px #004400;
+    border-radius: 8px;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #000000;
+    border-bottom: 2px solid #00ff00;
+    box-shadow: 0 0 10px #00ff00;
+    padding: 10px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #00ff00;
+    font-size: 1rem;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.navbar a:hover {
+    text-shadow: 0 0 10px #00ff00;
+}
+
+.navbar-brand h1 {
+    font-size: 1.8rem;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+/* User Section */
+.user-navbar {
+    display: flex;
+    align-items: center;
+}
+
+.user-icon {
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 5px #00ff00;
+}
+
+.user-name {
+    text-decoration: none;
+    color: #00ff00;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.user-name:hover {
+    color: #005500;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+.btn-primary, .btn-success {
+    background-color: #003300;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    box-shadow: 0 0 10px #00ff00;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover, .btn-success:hover {
+    background-color: #005500;
+    box-shadow: 0 0 20px #00ff00;
+}
+
+/* Category Navigation */
+nav.category {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #001100;
+    border-top: 2px solid #00ff00;
+    display: flex;
+    gap: 15px;
+}
+
+.category a {
+    text-decoration: none;
+    color: #00ff00;
+    font-size: 1rem;
+    padding: 5px 10px;
+    border: 1px solid #00ff00;
+    border-radius: 4px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.category a:hover {
+    color: #005500;
+    background-color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+/* Posts Section */
+.posts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.small-post {
+    padding: 10px;
+    background-color: #002200;
+    border: 2px solid #00ff00;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #00ff00, inset 0 0 5px #004400;
+    position: relative;
+}
+
+.small-post:hover {
+    box-shadow: 0 0 20px #00ff00, inset 0 0 10px #006600;
+}
+
+.small-post h4 {
+    font-size: 1.2rem;
+    margin: 0 0 10px;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.small-post p {
+    font-size: 1rem;
+    margin: 0 0 10px;
+    color: #00ff00;
+}
+
+.small-post small {
+    font-size: 0.8rem;
+    color: #00ff00;
+}
+
+
+a.btn.btn-warning {
+    display: inline-block;
+    text-align: center;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+
+/* Buttons */
+.btn-primary, .btn-success, .btn-warning {
+    background-color: #003300; /* Основной зеленый фон */
+    border: 2px solid #00ff00; /* Граница ярко-зеленого цвета */
+    color: #00ff00; /* Текст ярко-зеленого цвета */
+    box-shadow: 0 0 10px #00ff00; /* Эффект свечения */
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    float: right; /* Перемещает кнопки вправо */
+    margin-left: 10px; /* Для небольшого отступа между кнопками */
+}
+
+.btn-primary:hover, .btn-success:hover, .btn-warning:hover {
+    background-color: #005500; /* Более яркий зеленый при наведении */
+    box-shadow: 0 0 20px #00ff00; /* Увеличенное свечение при наведении */
+    color: #001100; /* Темный текст для контраста */
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        height: auto;
+    }
+
+    .category {
+        flex-wrap: wrap;
+    }
+
+    .small-post {
+        margin-bottom: 20px;
+    }
+}
+

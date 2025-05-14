@@ -16,7 +16,7 @@
 				<p class='link'>{{ post.project_link }}</p>
 				<p class='info'>{{ info['description'] }}</p>
 				<p class='language'>{{ info['language'] }}</p>
-				<p class='stars'>{{ info['stars'] }}</p>
+				<p class='stars'>{{ info['stars'] }}☆</p>
 			</div>
 			</a>
 		</div>
@@ -59,7 +59,7 @@
     {% for comment in post.comments[::-1] %}
 	<div class='comment'>
 		<div class='comment-author' style='display: inline-block'>
-            <img src='/{{ comment.author.image }}'/img>
+            <img class='user-image' src='/{{ comment.author.image }}'/img>
 			{{ comment.author.name }}
 		</div>
 		<div class='comment-rating' style='display: inline-block; float: right'>

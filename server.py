@@ -167,10 +167,11 @@ def add_post():
 
 @app.route('/')
 def home():
+    style = flask.request.args.get('style', '')
     try:
         db = db_session.create_session()
         posts = db.query(Post).all()[:-5:-1]
-        return flask.render_template('home.html', title='ProjectsList', posts=posts)
+        return flask.render_template('home.html', title='ProjectsList', posts=posts, style=style)
     finally:
         db.close()
 
