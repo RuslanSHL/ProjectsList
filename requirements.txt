@@ -1,8 +1,8 @@
 flask
-requests
+urllib3<2.0
 pillow
 flask_login
-io
 sqlalchemy
 werkzeug
 datetime
+flask_wtf

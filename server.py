@@ -26,6 +26,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return flask.render_template('404.html', title='Страница не найдена', error=e), 404
+
+
 def get_repo_info(github_link: str):
     try:
         if 'github.com' in github_link:
@@ -130,7 +135,10 @@ def user_page(user_id):
     try:
         db = db_session.create_session()
         user = db.query(User).filter(User.id == user_id).first()
-        return flask.render_template('user_page.html', title='Страница пользователя', user=user)
+        if user:
+            return flask.render_template('user_page.html', title='Страница пользователя', user=user)
+        else:
+            flask.abort(404, 'Пользователь не найден')
     finally:
         db.close()
 
@@ -183,7 +191,7 @@ def posts_list(category, filter='new'):
         elif category == 'new':
             posts = db.query(Post).all()[::-1]
         else:
-            return '404'
+            flask.abort(404)
         if category != 'new':
             if filter == 'best':
                 posts = posts.order_by(-(Post.like - Post.dislike)).all()
@@ -263,19 +271,25 @@ def comment_like_action(id, action):
 
 @app.route('/posts/<int:id>', methods=['GET', 'POST'])
 def post_view(id):
-    form = CommentForm()
-    db = db_session.create_session()
-    post = db.query(Post).filter(Post.id==id).first()
-    if form.validate_on_submit():
-        print('GET')
-        comment = Comment()
-        comment.post_id = post.id
-        comment.author_id = current_user.id
-        comment.text = form.text.data
-        db.add(comment)
-        db.commit()
-    info = get_repo_info(post.project_link)
-    return flask.render_template('post_view.html', title=post.title, post=post, form=form, info=info)
+    try:
+        form = CommentForm()
+        db = db_session.create_session()
+        post = db.query(Post).filter(Post.id==id).first()
+        if post:
+            if form.validate_on_submit():
+                    if current_user.is_authenticated:
+                        comment = Comment()
+                        comment.post_id = post.id
+                        comment.author_id = current_user.id
+                        comment.text = form.text.data
+                        db.add(comment)
+                        db.commit()
+            info = get_repo_info(post.project_link)
+            return flask.render_template('post_view.html', title=post.title, post=post, form=form, info=info)
+        else:
+            flask.abort(404, 'Пост не найден')
+    finally:
+        db.close()
 
 
 @app.route('/user<int:id>/edit', methods=['GET', 'POST'])
@@ -283,38 +297,41 @@ def user_edit(id):
     if current_user.id == id:
         db = db_session.create_session()
         user = db.query(User).filter(User.id==id).first()
-        form = RegisterForm()
-        if not form.validate_on_submit():
-            form.name.data = user.name
-            form.info.data = user.info
-            form.github.data = user.github
-            form.image.data = open(user.image)
-            form.mail.data = user.mail
+        if user:
+            form = RegisterForm()
+            if not form.validate_on_submit():
+                form.name.data = user.name
+                form.info.data = user.info
+                form.github.data = user.github
+                form.image.data = open(user.image)
+                form.mail.data = user.mail
 
-            return flask.render_template('register.html', title='Изменить профиль', form=form, edit=True)
+                return flask.render_template('register.html', title='Изменить профиль', form=form, edit=True)
+            else:
+                user.name = form.name.data
+                user.info = form.info.data
+                user.github = form.github.data
+
+                f = form.image.data
+                if f:
+                    user.image = f'static/img/img{user.id}.jpg'
+                    image_stream = io.BytesIO(f.read())
+                    img = Image.open(image_stream)
+                    width, height = img.size
+                    if width > height:
+                        delta = (width - height) // 2
+                        img = img.crop((delta, 0, width - delta, height))
+                    else:
+                        delta = (height - width) // 2
+                        img = img.crop((0, delta, width, height - delta))
+                    img = img.resize((320, 320))
+                    img = img.convert('RGB')
+                    img.save(user.image)
+
+                db.commit()
+                return flask.redirect(f'/user{user.id}')
         else:
-            user.name = form.name.data
-            user.info = form.info.data
-            user.github = form.github.data
-
-            f = form.image.data
-            if f:
-                user.image = f'static/img/img{user.id}.jpg'
-                image_stream = io.BytesIO(f.read())
-                img = Image.open(image_stream)
-                width, height = img.size
-                if width > height:
-                    delta = (width - height) // 2
-                    img = img.crop((delta, 0, width - delta, height))
-                else:
-                    delta = (height - width) // 2
-                    img = img.crop((0, delta, width, height - delta))
-                img = img.resize((320, 320))
-                img = img.convert('RGB')
-                img.save(user.image)
-
-            db.commit()
-            return flask.redirect(f'/user{user.id}')
+            flask.abort(404, 'Пользователь не найден')
     else:
         return 'В доступе запрещено'
 
@@ -323,33 +340,45 @@ def user_edit(id):
 def post_edit(id):
     db = db_session.create_session()
     post = db.query(Post).filter(Post.id==id).first()
-    if current_user.id == post.author_id or current_user.id == 1:
-        form = PostForm()
-        if not form.validate_on_submit():
-            form.title.data = post.title
-            form.text.data = post.text
-            form.project_link.data = post.project_link
-            form.category.data = post.category
+    if post:
+        if current_user.id == post.author_id or current_user.id == 1:
+            form = PostForm()
+            if not form.validate_on_submit():
+                form.title.data = post.title
+                form.text.data = post.text
+                form.project_link.data = post.project_link
+                form.category.data = post.category
 
-            return flask.render_template('add_post.html', title='Изменить пост', form=form, edit=True, post_id=id)
+                return flask.render_template('add_post.html', title='Изменить пост', form=form, edit=True, post_id=id)
+            else:
+                post.title = form.title.data
+                post.text = form.text.data
+                post.project_link = form.project_link.data
+                post.category = form.category.data
+                db.commit()
+                return flask.redirect(f'/posts/{id}')
         else:
-            post.title = form.title.data
-            post.text = form.text.data
-            post.project_link = form.project_link.data
-            post.category = form.category.data
-            db.commit()
-            return flask.redirect(f'/posts/{id}')
+            return 'В доступе запрещено'
     else:
-        return 'В доступе запрещено'
+        flask.abort(404, 'Поста не существует')
 
 
 @app.route('/posts/delete/<int:id>')
 def post_delete(id):
     db = db_session.create_session()
     post = db.query(Post).filter(Post.id==id).first()
-    db.delete(post)
-    db.commit()
-    return 'Пост удалён'
+    if post:
+        db.delete(post)
+        db.commit()
+        return 'Пост удалён'
+    else:
+        flask.abort(404, 'Поста, который вы хотите удалить, не существует')
+
+@app.errorhandler(db_session.sa.exc.TimeoutError)
+def handle_timeout_error(error):
+    db_session.close_all_session()
+    print('Произошла ошибка')
+    return "Ошибка SQLAlchemy: " + str(error)
 
 
 if __name__ == '__main__':

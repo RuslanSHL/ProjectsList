@@ -33,24 +33,28 @@
 		{% endif %}
 
 	</div>
-	<div class='sumbit-comment'>
-		<form action="" method="post">
-		{{ form.hidden_tag() }}
-		<p>
-			{{ form.text.label }}<br>
-			{{ form.text(class="form-control") }}<br>
-			{% for error in form.text.errors %}
-			<p class="alert alert-danger" role="alert">
-				{{ error }}
-			</p>
-			{% endfor %}
-		</p>
-		<p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-		{% if message %}
-			<p class="alert alert-danger" role="alert">{{ message }}</p>
-		{% endif %}
-		</form>
-	</div>
+    {% if current_user.is_authenticated %}
+        <div class='sumbit-comment'>
+            <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.text.label }}<br>
+                {{ form.text(class="form-control") }}<br>
+                {% for error in form.text.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+            {% if message %}
+                <p class="alert alert-danger" role="alert">{{ message }}</p>
+            {% endif %}
+            </form>
+        </div>
+    {% else %}
+    <small>Чтобы оставлять коментарии, войдите в аккаунт</small>
+    {% endif %}
 
     {% for comment in post.comments[::-1] %}
 	<div class='comment'>
