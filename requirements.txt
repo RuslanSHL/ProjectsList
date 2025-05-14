@@ -1,0 +1,8 @@
+flask
+requests
+pillow
+flask_login
+io
+sqlalchemy
+werkzeug
+datetime
