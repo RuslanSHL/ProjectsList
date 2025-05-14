@@ -7,6 +7,7 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
+    <link text="text/css"  href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     <title>{{title}}</title>
 
 </head>
@@ -24,9 +25,9 @@
 		<a class="btn btn-success" href="/login">Войти</a>
         {% endif %}
     </nav>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="category navbar navbar-light bg-light">
         <b>Проекты:</b>
-	<a href='/interesting'>Интересные</a>
+        <a href='/interesting'>Интересные</a>
         <a href='/goodcode'>Хороший код</a>
         <a href='/optimized'>Оптимизированные</a>
         <a href='/beautifuldesign '>Красивый дизайн</a>

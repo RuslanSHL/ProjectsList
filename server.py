@@ -32,13 +32,15 @@ def get_repo_info(github_link: str):
             name, repo = github_link.rstrip('/').split('/')[-2:]
             info = requests.get(f'https://api.github.com/repos/{name}/{repo}').json()
             out = {'stars': info['watchers_count'],
-                'author': name,
-                'description': info['description'],
-                'language': info['language']}
+                   'image': info['owner']['avatar_url'],
+                    'author': name,
+                    'description': info['description'],
+                    'language': info['language']}
             return out
         else:
             return {}
-    except Exception:
+    except Exception as e:
+        print('Возникла проблема с API', e)
         return {}
 
 
@@ -136,23 +138,23 @@ def user_page(user_id):
 @app.route('/add_post', methods=['GET', 'POST'])
 @login_required
 def add_post():
-    try:
         form = PostForm()
         if form.validate_on_submit():
-            db = db_session.create_session()
-            post = Post(
-                title=form.title.data,
-                text=form.text.data,
-                project_link=form.project_link.data,
-                category=form.category.data,
-                author_id=current_user.id
-            )
-            db.add(post)
-            db.commit()
-            return flask.redirect('/')
+            try:
+                db = db_session.create_session()
+                post = Post(
+                    title=form.title.data,
+                    text=form.text.data,
+                    project_link=form.project_link.data,
+                    category=form.category.data,
+                    author_id=current_user.id
+                )
+                db.add(post)
+                db.commit()
+                return flask.redirect('/')
+            finally:
+                db.close()
         return flask.render_template('add_post.html', title='Новый пост', form=form, edit=False)
-    finally:
-        db.close()
 
 
 @app.route('/')

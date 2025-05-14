@@ -1,46 +1,73 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3>{{ post.title }}</h3>
-<p>{{ post.text }}</p>
-<a href='{{ post.project_link }}'>
-    <div class='github_link'>
-        <p>{{ info['author'] }}</p>
-        <p>{{ post.project_link }}</p>
-        <p>{{ info['description'] }}</p>
-        <p>{{ info['stars'] }}</p>
-    </div>
-</a>
-<a href={{ url_for('post_like_action', id=post.id, action='like') }}>+ {{post.like}}</a>
-<a href={{ url_for('post_like_action', id=post.id, action='dislike') }}>- {{post.dislike}}</a>
-{% if post.author_id == current_user.id or current_user.id == 1 %}
-<p><a class='btn btn-warning' href='/posts/edit/{{post.id}}'>Изменить</a></p>
-{% endif %}
+<div class='container'>
+	<div class='post'>
+		<div class='post-info'>
+            <small>Автор: <a href='/user{{ post.author_id }}'>{{ post.author.name }}</a></small>
+			<h3>{{ post.title }}</h3>
+			<p style='white-space: pre-wrap;'>{{ post.text }}</p>
+			<a href='{{ post.project_link }}'>
+			<div class='github_link'>
+				<p class='author'>
+                    <img class='image' src='{{ info['image'] }}' /img>
+                    {{ info['author'] }}
+                </p>
+				<p class='link'>{{ post.project_link }}</p>
+				<p class='info'>{{ info['description'] }}</p>
+				<p class='language'>{{ info['language'] }}</p>
+				<p class='stars'>{{ info['stars'] }}</p>
+			</div>
+			</a>
+		</div>
+		<div class='rating-post'>
+			<div class='like' style='display: inline-block'>
+				<a href={{ url_for('post_like_action', id=post.id, action='like') }}>+ {{post.like}}</a>
+			</div>
+			<div class='dislike' style='display: inline-block'>
+				<a href={{ url_for('post_like_action', id=post.id, action='dislike') }}>- {{post.dislike}}</a>
+			</div>
+		</div>
+		{% if post.author_id == current_user.id or current_user.id == 1 %}
+		<p><a class='btn btn-warning' href='/posts/edit/{{post.id}}'>Изменить</a></p>
+		{% endif %}
 
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.text.label }}<br>
-        {{ form.text(class="form-control") }}<br>
-        {% for error in form.text.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    {% if message %}
-        <p class="alert alert-danger" role="alert">{{ message }}</p>
-    {% endif %}
-</form>
+	</div>
+	<div class='sumbit-comment'>
+		<form action="" method="post">
+		{{ form.hidden_tag() }}
+		<p>
+			{{ form.text.label }}<br>
+			{{ form.text(class="form-control") }}<br>
+			{% for error in form.text.errors %}
+			<p class="alert alert-danger" role="alert">
+				{{ error }}
+			</p>
+			{% endfor %}
+		</p>
+		<p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+		{% if message %}
+			<p class="alert alert-danger" role="alert">{{ message }}</p>
+		{% endif %}
+		</form>
+	</div>
 
-{% for comment in post.comments %}
-    {{ comment.author.name }}
-    {{ comment.text }}
-    <a href={{ url_for('comment_like_action', id=comment.id, action='like') }}>+ {{comment.like}}</a>
-    <a href={{ url_for('comment_like_action', id=comment.id, action='dislike') }}>- {{comment.dislike}}</a>
-    <br>
-{% endfor %}
-
-
+    {% for comment in post.comments[::-1] %}
+	<div class='comment'>
+		<div class='comment-author' style='display: inline-block'>
+            <img src='/{{ comment.author.image }}'/img>
+			{{ comment.author.name }}
+		</div>
+		<div class='comment-rating' style='display: inline-block; float: right'>
+			<div class='like' style='display: inline-block'>
+				<a href={{ url_for('comment_like_action', id=comment.id, action='like') }}>+ {{comment.like}}</a>
+			</div>
+			<div class='dislike' style='display: inline-block'>
+				<a href={{ url_for('comment_like_action', id=comment.id, action='dislike') }}>- {{comment.dislike}}</a>
+			</div>
+		</div>
+		<div class='comment-text' style='white-space: pre-wrap;'>{{ comment.text }}</div>
+	</div>
+	{% endfor %}
+</div>
 {% endblock %}
