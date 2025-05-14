@@ -6,3 +6,4 @@ sqlalchemy
 werkzeug
 datetime
 flask_wtf
+requests

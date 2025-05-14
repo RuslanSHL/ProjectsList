@@ -59,7 +59,6 @@ def load_user(user_id):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    try:
         form = RegisterForm()
         if form.validate_on_submit():
             if form.password.data != form.password_again.data:
@@ -67,43 +66,44 @@ def register():
                                     form=form,
                                     message="Пароли не совпадают", edit=False)
 
-            db = db_session.create_session()
-            if db.query(User).filter(User.mail == form.mail.data).first():
-                db.close()
-                return flask.render_template('register.html', title='Регистрация',
-                                    form=form,
-                                    message="Такая почта уже зарегестрирована", edit=False)
-            user = User(
-                name=form.name.data,
-                mail=form.mail.data,
-                github=form.github.data,
-                info=form.info.data,
-            )
-            user.set_password(form.password.data)
-            db.add(user)
+            try:
+                db = db_session.create_session()
+                if db.query(User).filter(User.mail == form.mail.data).first():
+                    db.close()
+                    return flask.render_template('register.html', title='Регистрация',
+                                        form=form,
+                                        message="Такая почта уже зарегестрирована", edit=False)
+                user = User(
+                    name=form.name.data,
+                    mail=form.mail.data,
+                    github=form.github.data,
+                    info=form.info.data,
+                )
+                user.set_password(form.password.data)
+                db.add(user)
 
-            f = form.image.data
-            if f:
-                user.image = f'static/img/img{user.id}.jpg'
-                image_stream = io.BytesIO(f.read())
-                img = Image.open(image_stream)
-                width, height = img.size
-                if width > height:
-                    delta = (width - height) // 2
-                    img = img.crop((delta, 0, width - delta, height))
+                f = form.image.data
+                if f:
+                    user.image = f'static/img/img{user.id}.jpg'
+                    image_stream = io.BytesIO(f.read())
+                    img = Image.open(image_stream)
+                    width, height = img.size
+                    if width > height:
+                        delta = (width - height) // 2
+                        img = img.crop((delta, 0, width - delta, height))
+                    else:
+                        delta = (height - width) // 2
+                        img = img.crop((0, delta, width, height - delta))
+                    img = img.resize((320, 320))
+                    img = img.convert('RGB')
+                    img.save(user.image)
                 else:
-                    delta = (height - width) // 2
-                    img = img.crop((0, delta, width, height - delta))
-                img = img.resize((320, 320))
-                img = img.convert('RGB')
-                img.save(user.image)
-            else:
-                user.image = 'static/img/img_standart.jpg'
-            db.commit()
-            return flask.redirect('/login')
+                    user.image = 'static/img/img_standart.jpg'
+                db.commit()
+                return flask.redirect('/login')
+            finally:
+                db.close()
         return flask.render_template('register.html', title='Регистрация', form=form, edit=False)
-    finally:
-        db.close()
 
 
 @app.route('/login', methods=['GET', 'POST'])
