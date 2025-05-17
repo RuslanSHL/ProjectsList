@@ -205,69 +205,70 @@ def posts_list(category, filter='new'):
 
 @app.route('/post_like/<int:id>/<action>')
 def post_like_action(id, action):
-    try:
-        db = db_session.create_session()
-        post = db.query(Post).filter(Post.id == id).first()
-        liked_user = db.query(User).filter(User.id==current_user.id).first()
-        if not liked_user in post.users_who_liked:
-            if action == 'like':
-                post.like += 1
-                action_in_int = 1
+    if current_user.is_authenticated:
+        try:
+            db = db_session.create_session()
+            post = db.query(Post).filter(Post.id == id).first()
+            liked_user = db.query(User).filter(User.id==current_user.id).first()
+            if not liked_user in post.users_who_liked:
+                if action == 'like':
+                    post.like += 1
+                    action_in_int = 1
+                else:
+                    post.dislike += 1
+                    action_in_int = -1
+                post_rating = RatingPosts(user_id=liked_user.id, post_id=id, rating=action_in_int)
+                db.add(post_rating)
+                db.commit()
             else:
-                post.dislike += 1
-                action_in_int = -1
-            post_rating = RatingPosts(user_id=liked_user.id, post_id=id, rating=action_in_int)
-            db.add(post_rating)
-            db.commit()
-        else:
-            post_rating = db.query(RatingPosts).filter(RatingPosts.user_id==liked_user.id, RatingPosts.post_id==id).first()
-            if action == 'dislike' and post_rating.rating == 1:
-                post_rating.rating = -1
-                post.like -= 1
-                post.dislike += 1
-                db.commit()
-            elif action == 'like' and post_rating.rating == -1:
-                post_rating.rating = 1
-                post.like += 1
-                post.dislike -= 1
-                db.commit()
-
-        return flask.redirect(flask.request.referrer)
-    finally:
-        db.close()
+                post_rating = db.query(RatingPosts).filter(RatingPosts.user_id==liked_user.id, RatingPosts.post_id==id).first()
+                if action == 'dislike' and post_rating.rating == 1:
+                    post_rating.rating = -1
+                    post.like -= 1
+                    post.dislike += 1
+                    db.commit()
+                elif action == 'like' and post_rating.rating == -1:
+                    post_rating.rating = 1
+                    post.like += 1
+                    post.dislike -= 1
+                    db.commit()
+        finally:
+            db.close()
+    return flask.redirect(flask.request.referrer)
 
 
 @app.route('/comment_like/<int:id>/<action>')
 def comment_like_action(id, action):
-    try:
-        db = db_session.create_session()
-        comment = db.query(Comment).filter(Comment.id == id).first()
-        liked_user = db.query(User).filter(User.id==current_user.id).first()
-        if not liked_user in comment.users_who_liked:
-            if action == 'like':
-                comment.like += 1
-                action_in_int = 1
+    if current_user.is_authenticated:
+        try:
+            db = db_session.create_session()
+            comment = db.query(Comment).filter(Comment.id == id).first()
+            liked_user = db.query(User).filter(User.id==current_user.id).first()
+            if not liked_user in comment.users_who_liked:
+                if action == 'like':
+                    comment.like += 1
+                    action_in_int = 1
+                else:
+                    comment.dislike += 1
+                    action_in_int = -1
+                comment_rating = RatingComments(user_id=liked_user.id, comment_id=id, rating=action_in_int)
+                db.add(comment_rating)
+                db.commit()
             else:
-                comment.dislike += 1
-                action_in_int = -1
-            comment_rating = RatingComments(user_id=liked_user.id, comment_id=id, rating=action_in_int)
-            db.add(comment_rating)
-            db.commit()
-        else:
-            comment_rating = db.query(RatingComments).filter(RatingComments.user_id==liked_user.id, RatingComments.comment_id==id).first()
-            if action == 'dislike' and comment_rating.rating == 1:
-                comment_rating.rating = -1
-                comment.like -= 1
-                comment.dislike += 1
-                db.commit()
-            elif action == 'like' and comment_rating.rating == -1:
-                comment_rating.rating = 1
-                comment.like += 1
-                comment.dislike -= 1
-                db.commit()
-        return flask.redirect(flask.request.referrer)
-    finally:
-        db.close()
+                comment_rating = db.query(RatingComments).filter(RatingComments.user_id==liked_user.id, RatingComments.comment_id==id).first()
+                if action == 'dislike' and comment_rating.rating == 1:
+                    comment_rating.rating = -1
+                    comment.like -= 1
+                    comment.dislike += 1
+                    db.commit()
+                elif action == 'like' and comment_rating.rating == -1:
+                    comment_rating.rating = 1
+                    comment.like += 1
+                    comment.dislike -= 1
+                    db.commit()
+        finally:
+            db.close()
+    return flask.redirect(flask.request.referrer)
 
 
 @app.route('/posts/<int:id>', methods=['GET', 'POST'])
