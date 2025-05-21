@@ -386,4 +386,4 @@ def handle_timeout_error(error):
 
 if __name__ == '__main__':
     db_session.global_init('db/database.db')
-    app.run(port=8080, host='127.0.0.1' if sys.argv[1] else sys.argv[1])
+    app.run(port=8080 if len(sys.argv) < 3 else sys.argv[2], host='127.0.0.1' if len(sys.argv) < 2 else sys.argv[1])
